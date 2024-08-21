@@ -72,10 +72,10 @@ async def post_create(post_name: Optional[str] = Query(None,max_length=50,  desc
 
 
 @apps.put("/update/{post_id}") 
-async def post_update(post_id: int,
-                      title: str,
-                      description: str,
-                      is_published: bool):
+async def post_update(post_id: Optional[int]=Path(description="type your post id to update"),
+                      title: Optional[str]=Query(description="type your post title to update", max_length=50),
+                      description: Optional[str]=Query(max_length=150, description='type your post description to update'),
+                      is_published: Optional[bool]=Query(description='type your post is published to update')):
     for item in post_list:
         if item['id'] == post_id:
             item['title'] = title
@@ -83,3 +83,12 @@ async def post_update(post_id: int,
             item['is_published'] = is_published
         return JSONResponse(item, status_code=status.HTTP_301_MOVED_PERMANENTLY)       
     return JSONResponse({"message": "Post not found"}, status_code=status.HTTP_404_NOT_FOUND)   
+
+
+@apps.delete("/delete/{post_id}")
+async def delete(post_id: Optional[int]=Path(description="type your id to delete")):
+    for index, item in enumerate(post_list):
+        if item['id'] == post_id:
+            del post_list[index]
+            return JSONResponse({"message": "Post deleted"}, status_code=status.HTTP_204_NO_CONTENT)
+    return JSONResponse({"message": "Post not found"}, status_code=status.HTTP_404_NOT_FOUND)
