@@ -9,19 +9,19 @@ apps = FastAPI()
 
 post_list = [
     {
-        "item_id": 1,
+        "id": 1,
         "title": "post1",
         "description": "post1 description",
         "is_published": False,
     },
     {
-        "item_id": 2,
+        "id": 2,
         "title": "post2",
         "description": "post2 description",
         "is_published": True,
     },
     {
-        "item_id": 3,
+        "id": 3,
         "title": "post3",
         "description": "post3 description",
         "is_published": False,
@@ -45,7 +45,7 @@ async def search_post(post_id: Optional[int] = Query(None,description='This is a
     if post_id == 0:
                  return JSONResponse({"message":f"we don't have any post"},status_code=status.HTTP_404_NOT_FOUND)                
     if post_id :
-        result = [item for item in post_list if post_id == item['item_id']]
+        result = [item for item in post_list if post_id == item['id']]
     if title :
         result = [item for item in result if title.lower() == item['title'].lower()]
     if description :
@@ -56,11 +56,11 @@ async def search_post(post_id: Optional[int] = Query(None,description='This is a
     if result:                       
         return JSONResponse(result,status_code=status.HTTP_200_OK)
     else:
-         return JSONResponse({"message":f"we don't have any post_id={post_id}, title={title}, description={description}, is_published={is_published}"},status_code=status.HTTP_404_NOT_FOUND)                
+         return JSONResponse({"message":f"We don't have any id={id}, title={title}, description={description}, is_published={is_published}"},status_code=status.HTTP_404_NOT_FOUND)                
 
 
 
-@apps.post('/name/')
+@apps.post('/create/')
 async def post_create(post_name: Optional[str] = Query(None,max_length=50,  description='this is a create post to post_name'),
                       description: Optional[str] = Query(None, max_length=150,  description='this is a create post to description')):
        if post_name and description: 
@@ -68,13 +68,18 @@ async def post_create(post_name: Optional[str] = Query(None,max_length=50,  desc
             post_list.append(post)              
             return JSONResponse(post, status_code=status.HTTP_201_CREATED)
             
-       return JSONResponse({"message":"we don't create  any post"},status_code=status.HTTP_400_BAD_REQUEST)                
+       return JSONResponse({"message":"We don't create  any post"},status_code=status.HTTP_400_BAD_REQUEST)                
 
 
-# @apps.put("/names/{id}") 
-# async def post_update(id:int, name:str):
-#     for item in post_list:
-#         if item['id']==id:
-#             item['name'] = name 
-#         return JSONResponse(item, status_code=status.HTTP_301_MOVED_PERMANENTLY)       
-       
+@apps.put("/update/{post_id}") 
+async def post_update(post_id: int,
+                      title: str,
+                      description: str,
+                      is_published: bool):
+    for item in post_list:
+        if item['id'] == post_id:
+            item['title'] = title
+            item['description'] = description
+            item['is_published'] = is_published
+        return JSONResponse(item, status_code=status.HTTP_301_MOVED_PERMANENTLY)       
+    return JSONResponse({"message": "Post not found"}, status_code=status.HTTP_404_NOT_FOUND)   
