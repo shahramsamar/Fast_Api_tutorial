@@ -63,11 +63,12 @@ async def search_post(post_id: Optional[int] = Query(None,description='This is a
 @apps.post('/name/')
 async def post_create(post_name: Optional[str] = Query(None,max_length=50,  description='this is a create post to post_name'),
                       description: Optional[str] = Query(None, max_length=150,  description='this is a create post to description')):
-       post = {"id":random.randint(4,10),"name":post_name,"description":description,"is_published":False}
-       post_list.append(post)              
-       return JSONResponse(post, status_code=status.HTTP_201_CREATED)
-    # else:
-    #     return JSONResponse({"message":"we don't create  any post"},status_code=status.HTTP_404_NOT_FOUND)                
+       if post_name and description: 
+            post = {"id":random.randint(4,10),"name":post_name,"description":description,"is_published":False}
+            post_list.append(post)              
+            return JSONResponse(post, status_code=status.HTTP_201_CREATED)
+            
+       return JSONResponse({"message":"we don't create  any post"},status_code=status.HTTP_400_BAD_REQUEST)                
 
 
 # @apps.put("/names/{id}") 
