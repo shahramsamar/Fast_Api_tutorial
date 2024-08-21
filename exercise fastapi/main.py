@@ -1,7 +1,9 @@
 from fastapi import FastAPI, Query, status, Path
 from typing import Optional
 from fastapi.responses import JSONResponse
-from sqlalchemy import false, true
+import random
+
+
 
 apps = FastAPI()
 
@@ -58,22 +60,14 @@ async def search_post(post_id: Optional[int] = Query(None,description='This is a
 
 
 
-
-# async def search_post(post_id:Optional[int]=Path(description="post_id")):
-#     # name: Optional[str]=Query(None,max_length=10,description="search")):
-#     result = post_list
-#     if post_id:
-#         result = [item for item in post_list if post_id == item['item_id']]
-#         return JSONResponse(result,status_code=status.HTTP_200_OK)
-#     else:
-#         return JSONResponse({"message":"we don't have any id"},status_code=status.HTTP_404_NOT_FOUND)
-
-# @apps.post('/name')
-# async def post_create(post_id: Optional[int]=Query(None,max_length=3, description="id_number:"),
-#                       post_name: Optional[str]=Query(None,max_length=10, description="names:")):
-#     post = {"id":post_id,"name":post_name}
-#     post_list.append(post)              
-#     return JSONResponse(post, status_code=status.HTTP_201_CREATED)
+@apps.post('/name/')
+async def post_create(post_name: Optional[str] = Query(None,max_length=50,  description='this is a create post to post_name'),
+                      description: Optional[str] = Query(None, max_length=150,  description='this is a create post to description')):
+       post = {"id":random.randint(4,10),"name":post_name,"description":description,"is_published":False}
+       post_list.append(post)              
+       return JSONResponse(post, status_code=status.HTTP_201_CREATED)
+    # else:
+    #     return JSONResponse({"message":"we don't create  any post"},status_code=status.HTTP_404_NOT_FOUND)                
 
 
 # @apps.put("/names/{id}") 
