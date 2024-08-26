@@ -17,6 +17,23 @@ names_db = [
     },
 ]
 
+#@app.<method name>("<url_path>")
+#async_or_not def function_name(<request>,<args>):
+#    return <response>
+
+
+
+# query parameter with ? mark in end of parameter
+# path  parameter with slug in inti in address
+
+# structure
+# request: path, query
+# body: urlencode, paintext
+# method 
+# response
+
+
+# example to use 
 # GET  /names List
 # GET /names/<id> Detail
 

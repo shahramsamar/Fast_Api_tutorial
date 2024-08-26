@@ -1,2 +1,0 @@
-# how to install the package
-pip install "fastapi[standard]==0.112.0
